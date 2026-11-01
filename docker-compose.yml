@@ -1,0 +1,24 @@
+name: practica-api-productos
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: RootProductos123!
+      MYSQL_DATABASE: tienda_productos
+      MYSQL_USER: productos
+      MYSQL_PASSWORD: Productos123!
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - datos_productos:/var/lib/mysql
+      - ./database/crear-tabla.sql:/docker-entrypoint-initdb.d/crear-tabla.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  datos_productos:
